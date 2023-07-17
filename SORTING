@@ -1,0 +1,90 @@
+##################################### BUBBLE SORT ####################################################
+arr=[5,1,4,9,7,2]
+n=len(arr)
+for i in range(0,n-1):
+    for j in range(0,n-i-1):
+        if(arr[j]>arr[j+1]):
+            arr[j],arr[j+1]=arr[j+1],arr[j]
+print(arr)
+#Time complexity:O(n2)
+
+
+######################################## INSERTION SORT ###################################################
+def Insertion_sort(arr):
+    length=len(arr)
+    for i in range(1,length):
+        key=arr[i]
+        j=i-1
+        while(j>=0 and arr[j]>key):
+            arr[j+1]=arr[j]
+            j-=1
+        arr[j+1]=key
+
+nums=[4,1,6,8,0,3]
+Insertion_sort(nums)
+print(nums)
+#Time Complexity: O(n2)
+
+
+#################################### MERGE SORT ############################################
+def merge(arr,leftarr,rightarr,left,right):
+    i,j,k=0,0,0
+    while(i<left and j<right):
+        if(leftarr[i]<rightarr[j]):
+            arr[k]=leftarr[i]
+            k+=1
+            i+=1
+        else:
+            arr[k]=rightarr[j]
+            k+=1
+            j+=1
+#for remaining elements
+    while i < left:
+        arr[k] = leftarr[i]
+        i += 1
+        k += 1
+
+    while j < right:
+        arr[k] = rightarr[j]
+        j += 1
+        k += 1
+
+    
+def mergesort(arr,length):
+    if(length==1):
+        return
+    l=0
+    h=length-1
+    mid=l+((h-l)//2)
+    leftarr=[0]*(mid+1)
+    rightarr=[0]*(length-mid-1)
+    for i in range(0,mid+1):
+        leftarr[i]=arr[i]
+    for i in range(mid+1,length):
+        rightarr[i-(mid+1)]=arr[i]
+    mergesort(leftarr,mid+1)
+    mergesort(rightarr,length-mid-1)
+    merge(arr,leftarr,rightarr,mid+1,length-mid-1)
+
+nums=[4,2,8,6,9,1,3,0]
+length=len(nums)
+mergesort(nums,length)
+print(nums)
+#Time complexity: O(nlogn)
+#n for iteration of an elements in the array
+#logn for In each iteration dividing the arr into partition
+
+
+########################################## SELECTION SORT ######################################################
+
+nums=[0,8,3,1,6,3,2,8]
+length=len(nums)
+for i in range(0,length):
+    midindx=i 
+    for j in range(i+1,length):
+        if(nums[midindx]>nums[j]):
+            midindx=j 
+    #swapping
+    nums[i],nums[midindx]=nums[midindx],nums[i]
+print(nums)
+#Time complexity: O(n2)
