@@ -1,0 +1,178 @@
+//All paths from source to target//
+
+class Solution:
+    def allPathsSourceTarget(self, graph):
+        n = len(graph)
+        adj = [[] for _ in range(n)]
+        for i in range(n):
+            for j in range(len(graph[i])):
+                adj[i].append(graph[i][j])
+        ans = []
+        self.dfs(0, adj, [], n, ans)
+        return ans
+
+    def dfs(self, node, adj, val, n, ans):
+        if node == n - 1:
+            val.append(node)
+            ans.append(val[:])
+            val.pop()
+            return
+
+        val.append(node)
+        for nd in adj[node]:
+            self.dfs(nd, adj, val, n, ans)
+        val.pop()
+--------------------------------------------------------------------------------------------------------------
+//Is graph bipartite//
+
+from collections import defaultdict
+
+class Solution:
+    def isBipartite(self, graph):
+        n = len(graph)
+        visited = [-1] * n
+        
+        def check(start, color):
+            visited[start] = color
+            for neighbor in graph[start]:
+                if visited[neighbor] == -1:
+                    if not check(neighbor, 1 - color):
+                        return False
+                elif visited[neighbor] == color:
+                    return False
+            return True
+        
+        for i in range(n):
+            if visited[i] == -1:
+                if not check(i, 0):
+                    return False
+        return True
+---------------------------------------------------------------------------------------------------------------
+//Course Schedule//
+
+from collections import deque
+
+class Solution:
+    def canFinish(self, n, prerequisites):
+        adj = [[] for _ in range(n)]
+        indegree = [0] * n
+        ans = []
+        
+        for x in prerequisites:
+            adj[x[0]].append(x[1])
+            indegree[x[1]] += 1
+        
+        q = deque()
+        for i in range(n):
+            if indegree[i] == 0:
+                q.append(i)
+        
+        while q:
+            t = q.popleft()
+            ans.append(t)
+            for x in adj[t]:
+                indegree[x] -= 1
+                if indegree[x] == 0:
+                    q.append(x)
+        
+        return len(ans) == n
+-----------------------------------------------------------------------------------------------------------------
+//Course Schedule II //
+ 
+from collections import deque
+
+class Solution:
+    def findOrder(self, numCourses, prerequisites):
+        v = numCourses
+        adj = [[] for _ in range(v)]
+        result = [0] * v
+        indegree = [0] * v
+        topoLen = 0
+
+        for pr in prerequisites:
+            adj[pr[1]].append(pr[0])
+
+        for node in range(v):
+            for adjNode in adj[node]:
+                indegree[adjNode] += 1
+
+        Q = deque()
+        for node in range(v):
+            if indegree[node] == 0:
+                Q.append(node)
+
+        i = 0
+        while Q:
+            node = Q.popleft()
+            result[i] = node
+            i += 1
+            topoLen += 1
+            for adjNode in adj[node]:
+                indegree[adjNode] -= 1
+                if indegree[adjNode] == 0:
+                    Q.append(adjNode)
+
+        if topoLen != v:
+            return []
+
+        return result
+----------------------------------------------------------------------------------------------------------------
+//Clone graph//
+
+class Node:
+    def __init__(self, val):
+        self.val = val
+        self.neighbors = []
+
+class Solution:
+    def cloneGraph(self, node):
+        if not node:
+            return None
+
+        def dfs(node, copy, vis):
+            vis[copy.val] = copy
+            for n in node.neighbors:
+                if vis[n.val] is None:
+                    new_node = Node(n.val)
+                    copy.neighbors.append(new_node)
+                    dfs(n, new_node, vis)
+                else:
+                    copy.neighbors.append(vis[n.val])
+
+        copy = Node(node.val)
+        vis = [None] * 101
+        dfs(node, copy, vis)
+        return copy
+
+-----------------------------------------------------------------------------------------------------------------
+//Number of provinces//
+
+class Solution:
+    def findCircleNum(self, isConnected):
+        n = len(isConnected)
+        adj = [[] for _ in range(n)]
+
+        for i in range(n):
+            for j in range(n):
+                if isConnected[i][j] != 0 and i != j:
+                    adj[i].append(j)
+                    adj[j].append(i)
+
+        visited = [False] * n
+        count = 0
+
+        for i in range(n):
+            if not visited[i]:
+                count += 1
+                self.dfs(adj, visited, i)
+
+        return count
+
+    def dfs(self, adj, visited, node):
+        visited[node] = True
+        for neighbor in adj[node]:
+            if not visited[neighbor]:
+                self.dfs(adj, visited, neighbor)
+
+
+
